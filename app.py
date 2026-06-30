@@ -27,3 +27,26 @@ def verify():
         return challenge, 200
 
     return "Verification failed", 403
+@app.route("/webhook", methods=["POST"])
+def webhook():
+    data = request.get_json()
+
+    try:
+        entry = data["entry"][0]
+        changes = entry["changes"][0]
+        value = changes["value"]
+
+        if "messages" in value:
+            message = value["messages"][0]
+            user_message = message["text"]["body"]
+            from_number = message["from"]
+
+            response = model.generate_content(user_message)
+            ai_reply = response.text
+
+            send_whatsapp_message(from_number, ai_reply)
+
+    except Exception as e:
+        print("Error:", e)
+
+    return "OK", 200
