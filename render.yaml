@@ -1,7 +1,6 @@
 services:
   - type: web
-    name: whatsapp-ai-bot
+    name: whatsapp-gemini-bot
     env: python
-    plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app
